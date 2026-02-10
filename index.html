@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hey Suniyakaari</title>
+
+<style>
+body{
+    margin:0;
+    background:linear-gradient(to bottom,#ffb6c1,#ffe4e1);
+    font-family:'Segoe UI',sans-serif;
+    overflow-x:hidden;
+}
+
+h1{
+    text-align:center;
+    margin:20px;
+    color:black;
+    font-weight:bold;
+}
+
+/* LAYOUT */
+#container{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    padding:30px;
+    gap:30px;
+}
+
+/* CONTENT */
+#content{
+    width:45%;
+    display:none;
+    color:black;
+    font-weight:bold;
+    font-size:1.15rem;
+    line-height:1.6;
+}
+
+/* NORMAL LINE */
+.line{
+    opacity:0;
+    margin-bottom:6px;
+    animation:fadeGlow 2s forwards;
+}
+
+/* IMPORTANT LAST LINES */
+.highlight{
+    font-weight:900;
+    font-size:1.3rem;
+    color:#ff1e4d;
+    text-shadow:0 0 15px rgba(255,30,77,0.8);
+    animation:highlightPop 2s forwards;
+}
+
+@keyframes highlightPop{
+    from{transform:scale(0.9); opacity:0;}
+    to{transform:scale(1); opacity:1;}
+}
+
+@keyframes fadeGlow{
+    from{
+        opacity:0;
+        filter:blur(3px);
+    }
+    to{
+        opacity:1;
+        filter:blur(0);
+        text-shadow:0 0 8px rgba(255,105,180,0.6);
+    }
+}
+
+/* EMOJI ANIMATION */
+.emoji{
+    display:inline-block;
+    animation:emojiBounce 1.6s infinite alternate;
+}
+
+@keyframes emojiBounce{
+    from{transform:translateY(0);}
+    to{transform:translateY(-5px);}
+}
+
+/* PHOTO – FULL FACE */
+#slide{
+    width:45%;
+    max-width:550px;
+    height:620px;
+    object-fit:contain;           /* 🔥 FULL FACE */
+    background:linear-gradient(#000,#222);
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.4);
+    display:none;
+}
+
+/* BUTTONS */
+button{
+    padding:14px 30px;
+    font-size:1.1rem;
+    border:none;
+    border-radius:30px;
+    background:#ff4d6d;
+    color:white;
+    cursor:pointer;
+    margin:10px;
+}
+
+button:hover{background:#ff1e4d;}
+
+/* SECRET BUTTON */
+#secretBtn{
+    display:none;
+    margin:40px auto;
+    animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+    0%,100{transform:scale(1);}
+    50%{transform:scale(1.15);}
+}
+
+/* POPUP */
+#popup{
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.6);
+    justify-content:center;
+    align-items:center;
+}
+
+#popupCard{
+    background:white;
+    padding:35px 45px;
+    border-radius:22px;
+    font-size:1.4rem;
+    text-align:center;
+    animation:zoom 0.6s;
+}
+
+@keyframes zoom{
+    from{transform:scale(0.5); opacity:0;}
+    to{transform:scale(1); opacity:1;}
+}
+
+/* HEART RAIN */
+.heart{
+    position:fixed;
+    top:-20px;
+    font-size:22px;
+    animation:fall linear forwards;
+}
+
+@keyframes fall{
+    to{
+        transform:translateY(110vh);
+        opacity:0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<h1>Hey Suniyakaari 🫴🥹💗🫂</h1>
+
+<div style="text-align:center;">
+    <button onclick="startPromise()">I promise to you 🤞</button>
+    <button onclick="toggleSong()">Play / Pause ⏯️</button>
+</div>
+
+<div id="container">
+    <div id="content"></div>
+    <img id="slide" src="photos/pic1.jpeg">
+</div>
+
+<button id="secretBtn" onclick="showPopup()">Secret 💌</button>
+
+<div id="popup">
+    <div id="popupCard">
+        I love you ❤️<br>
+        Suniyakaari 🫴🥹💗🫂<br><br>
+        <button onclick="closePopup()">Close 💞</button>
+    </div>
+</div>
+
+<audio id="loveSong">
+    <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* CONTENT */
+const text = `
+Naa promise pantren 🤞❤️
+Epaiyumae Naa un life la irupen 🫂✨
+Unna vitu poga maaten 🥹💞
+Naa maara maaten 😌💗
+Enakku nee epaiyumae first and important 🥇❤️
+Unnoda ellaaam happiness and sadness la irupen 😊😔🫶
+Unakku entha kastam thara maaten 🛡️🤍
+Unna paakura vidham maaravae maarathu 👀💘
+Unna nallaaa pathupen 🫂🌸
+Unakaga irupen 💖✨
+Neethaan nee mattum thaan 🥹💝
+Neenga na romba istam nga 😭❤️
+I love you Suniyakaari 🫴🥹💗🫂
+`;
+
+let lines=text.trim().split("\n");
+let line=0;
+let content=document.getElementById("content");
+
+function animateEmojis(str){
+    return str.replace(/([\u{1F300}-\u{1FAFF}])/gu,
+    `<span class="emoji">$1</span>`);
+}
+
+function typeEffect(){
+    if(line<lines.length){
+        let div=document.createElement("div");
+
+        /* LAST 2 LINES HIGHLIGHT */
+        if(line >= lines.length-2){
+            div.className="highlight";
+        }else{
+            div.className="line";
+        }
+
+        div.innerHTML=animateEmojis(lines[line]);
+        content.appendChild(div);
+        line++;
+        setTimeout(typeEffect,1600);
+    }else{
+        setTimeout(startPhotos,3000);
+    }
+}
+
+/* PHOTOS */
+let photos=[];
+for(let i=1;i<=32;i++) photos.push(`photos/pic${i}.jpeg`);
+let index=0,interval;
+
+/* SONG */
+let song=document.getElementById("loveSong");
+let playing=false;
+
+function startPromise(){
+    content.style.display="block";
+    content.innerHTML="";
+    line=0;
+    song.play(); playing=true;
+    typeEffect();
+}
+
+function toggleSong(){
+    playing? song.pause():song.play();
+    playing=!playing;
+}
+
+function startPhotos(){
+    let img=document.getElementById("slide");
+    img.style.display="block";
+    interval=setInterval(()=>{
+        index++;
+        if(index>=photos.length){
+            clearInterval(interval);
+            document.getElementById("secretBtn").style.display="block";
+            return;
+        }
+        img.src=photos[index];
+    },3000);
+}
+
+function showPopup(){
+    document.getElementById("popup").style.display="flex";
+}
+
+function closePopup(){
+    document.getElementById("popup").style.display="none";
+    heartRain();
+}
+
+function heartRain(){
+    for(let i=0;i<40;i++){
+        let h=document.createElement("div");
+        h.className="heart";
+        h.innerHTML="❤️";
+        h.style.left=Math.random()*100+"vw";
+        h.style.animationDuration=(2+Math.random()*3)+"s";
+        document.body.appendChild(h);
+        setTimeout(()=>h.remove(),5000);
+    }
+}
+</script>
+
+</body>
+</html>
